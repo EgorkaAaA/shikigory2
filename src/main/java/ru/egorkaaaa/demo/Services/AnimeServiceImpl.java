@@ -1,7 +1,6 @@
 package ru.egorkaaaa.demo.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.egorkaaaa.demo.Entities.anime;
 import ru.egorkaaaa.demo.Exceptions.animeAllReadyExistsException;
@@ -20,6 +19,7 @@ public class AnimeServiceImpl implements animeServiceInterface {
         this.animeRepo = animeRepo;
     }
 
+    @Override
     public void createNewAnime(anime anime) throws animeAllReadyExistsException {
         if(animeRepo.findByAnimeName(anime.getAnimeName()) == null) {
             animeRepo.save(anime);
@@ -29,8 +29,7 @@ public class AnimeServiceImpl implements animeServiceInterface {
         }
     }
 
-//    public
-
+    @Override
     public Collection<anime> getAllAnime() {
         return animeRepo.findAll();
     }
@@ -61,6 +60,12 @@ public class AnimeServiceImpl implements animeServiceInterface {
 
     @Override
     public anime findAnimeByAnimeName(String animeName) throws animeNotFoundException {
-        return null;
+        anime anime = animeRepo.findByAnimeName(animeName);
+        if(anime != null) {
+            return anime;
+        }
+        else {
+            throw new animeNotFoundException(String.format("Anime with name %s not found",animeName));
+        }
     }
 }
